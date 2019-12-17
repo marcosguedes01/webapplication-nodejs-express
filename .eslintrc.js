@@ -1,17 +1,13 @@
 module.exports = {
-    "env": {
-        "node": true
-    },
-    "extends": "eslint:recommended",
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
-    },
-    "parserOptions": {
-        "ecmaVersion": 2018,
-        "sourceType": "module"
-    },
-    "ignorePatterns": ["node_modules/", "views/", "commands.txt"],
+    "extends": "airbnb",
     "rules": {
-    }
+        "linebreak-style": ["error", "windows"],
+        "no-console": ["error", { 
+            "allow": ["log", "warn", "error"] 
+        }],
+        "comma-dangle": 0,
+        "no-underscore-dangle": "off"
+    },
+    "env": { "node": true, "mocha": true },
+    "ignorePatterns": ["node_modules/", "views/"],
 };

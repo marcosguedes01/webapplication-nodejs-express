@@ -1,4 +1,4 @@
-require('debug');
+require('debug')('app');
 const express = require('express');
 const chalk = require('chalk');
 const morgan = require('morgan');

@@ -1,23 +1,24 @@
 const express = require('express');
-const sql = require('mssql');
 const debug = require('debug')('app:bookRoutes');
+const sql = require('mssql');
 
-function router(config, optionsTopMenu) {
+function router(sqlConfig, optionsTopMenu) {
   const bookRouter = express.Router();
 
   bookRouter.get('/', (req, res) => {
     (async () => {
-      await sql.connect(config);
-      const result = await sql.query('select * from books');
+      await sql.connect(sqlConfig);
+      const request = await new sql.Request();
+      const { recordset } = await request.query('select * from books');
 
-      debug(result);
+      debug(recordset);
 
       res.render(
         'books',
         {
           title: 'Books',
           nav: optionsTopMenu,
-          books: result.recordset
+          books: recordset
         }
       );
     })();
@@ -28,17 +29,19 @@ function router(config, optionsTopMenu) {
       const { id } = req.params;
 
       (async () => {
-        await await sql.connect(config);
-        const result = await sql.query(`select * from books where id=${id}`);
+        await sql.connect(sqlConfig);
+        const request = await new sql.Request();
+        await request.input('id', sql.Int, id);
+        const { recordset } = await request.query('select * from books where id = @id');
 
-        debug(result);
+        debug(recordset);
 
         res.render(
           'book',
           {
             title: 'Book',
             nav: optionsTopMenu,
-            book: result.recordset[0]
+            book: recordset[0]
           }
         );
       })();

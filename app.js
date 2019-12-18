@@ -7,7 +7,7 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
 
-const config = {
+const sqlConfig = {
   user: 'appslearn',
   password: 'learn@apps/#123',
   server: 'appslearn.database.windows.net',
@@ -32,7 +32,7 @@ const optionsTopMenu = [
   { title: 'Authors', link: '/authors' }
 ];
 
-const bookRouter = require('./routers/booksRouter')(config, optionsTopMenu);
+const bookRouter = require('./routers/booksRouter')(sqlConfig, optionsTopMenu);
 const authorRouter = require('./routers/authorsRouter')(optionsTopMenu);
 
 app.get('/', (req, res) => {

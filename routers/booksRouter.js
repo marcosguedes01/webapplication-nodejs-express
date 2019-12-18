@@ -5,55 +5,43 @@ const debug = require('debug')('app:bookRoutes');
 function router(config, optionsTopMenu) {
   const bookRouter = express.Router();
 
-  const books = [
-    {
-      id: 1,
-      title: 'War and Peace',
-      genre: 'Generical',
-      author: 'Lev Nikolayevich Tolstoy',
-      read: false
-    },
-    {
-      id: 2,
-      title: 'War and Peace 2',
-      genre: 'Generical',
-      author: 'Lev Nikolayevich Tolstoy',
-      read: false
-    },
-  ];
-
   bookRouter.get('/', (req, res) => {
-    sql.connect(config).then((pool) => {
-      const request = pool.request();
+    (async () => {
+      await sql.connect(config);
+      const result = await sql.query('select * from books');
 
-      request.query('select * from books')
-        .then((result) => {
-          debug(result);
+      debug(result);
 
-          res.render(
-            'books',
-            {
-              title: 'Books',
-              nav: optionsTopMenu,
-              books: result.recordset
-            }
-          );
-        });
-    });
+      res.render(
+        'books',
+        {
+          title: 'Books',
+          nav: optionsTopMenu,
+          books: result.recordset
+        }
+      );
+    })();
   });
 
   bookRouter.route('/:id')
     .get((req, res) => {
       const { id } = req.params;
 
-      res.render(
-        'book',
-        {
-          title: 'Book',
-          nav: optionsTopMenu,
-          book: books[id - 1]
-        }
-      );
+      (async () => {
+        await await sql.connect(config);
+        const result = await sql.query(`select * from books where id=${id}`);
+
+        debug(result);
+
+        res.render(
+          'book',
+          {
+            title: 'Book',
+            nav: optionsTopMenu,
+            book: result.recordset[0]
+          }
+        );
+      })();
     });
 
   return bookRouter;

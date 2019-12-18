@@ -1,48 +1,51 @@
 const express = require('express');
-const optionsTopMenu = require('../optionsTopMenu');
 
-const bookRouter = express.Router();
+function router(optionsTopMenu) {
+  const bookRouter = express.Router();
 
-const books = [
-  {
-    id: 1,
-    title: 'War and Peace',
-    genre: 'Generical',
-    author: 'Lev Nikolayevich Tolstoy',
-    read: false
-  },
-  {
-    id: 2,
-    title: 'War and Peace 2',
-    genre: 'Generical',
-    author: 'Lev Nikolayevich Tolstoy',
-    read: false
-  },
-];
-
-bookRouter.get('/books', (req, res) => {
-  res.render(
-    'books',
+  const books = [
     {
-      title: 'Books',
-      nav: optionsTopMenu,
-      books
-    }
-  );
-});
+      id: 1,
+      title: 'War and Peace',
+      genre: 'Generical',
+      author: 'Lev Nikolayevich Tolstoy',
+      read: false
+    },
+    {
+      id: 2,
+      title: 'War and Peace 2',
+      genre: 'Generical',
+      author: 'Lev Nikolayevich Tolstoy',
+      read: false
+    },
+  ];
 
-bookRouter.route('/books/:id')
-  .get((req, res) => {
-    const { id } = req.params;
-
+  bookRouter.get('/', (req, res) => {
     res.render(
-      'book',
+      'books',
       {
-        title: 'Book',
+        title: 'Books',
         nav: optionsTopMenu,
-        book: books[id - 1]
+        books
       }
     );
   });
 
-module.exports = bookRouter;
+  bookRouter.route('/:id')
+    .get((req, res) => {
+      const { id } = req.params;
+
+      res.render(
+        'book',
+        {
+          title: 'Book',
+          nav: optionsTopMenu,
+          book: books[id - 1]
+        }
+      );
+    });
+
+  return bookRouter;
+}
+
+module.exports = router;

@@ -4,9 +4,14 @@ const express = require('express');
 const chalk = require('chalk');
 const morgan = require('morgan');
 const path = require('path');
-const bookRouter = require('./routers/booksRouter');
-const authorRouter = require('./routers/authorsRouter');
-const optionsTopMenu = require('./optionsTopMenu');
+
+const optionsTopMenu = [
+  { title: 'Books', link: '/books' },
+  { title: 'Authors', link: '/authors' }
+];
+
+const bookRouter = require('./routers/booksRouter')(optionsTopMenu);
+const authorRouter = require('./routers/authorsRouter')(optionsTopMenu);
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -32,8 +37,8 @@ app.get('/', (req, res) => {
   );
 });
 
-app.use('/', bookRouter);
-app.use('/', authorRouter);
+app.use('/books', bookRouter);
+app.use('/authors', authorRouter);
 
 app.listen(port, () => {
   console.log(`listening on port ${chalk.green(port)}.`);

@@ -25,7 +25,7 @@ function router(sqlConfig, optionsTopMenu) {
   });
 
   bookRouter.route('/:id')
-    .get((req, res) => {
+    .all((req, res, next) => {
       const { id } = req.params;
 
       (async () => {
@@ -34,17 +34,20 @@ function router(sqlConfig, optionsTopMenu) {
         await request.input('id', sql.Int, id);
         const { recordset } = await request.query('select * from books where id = @id');
 
-        debug(recordset);
+        [req.book] = recordset;
 
-        res.render(
-          'book',
-          {
-            title: 'Book',
-            nav: optionsTopMenu,
-            book: recordset[0]
-          }
-        );
+        next();
       })();
+    })
+    .get((req, res) => {
+      res.render(
+        'book',
+        {
+          title: 'Book',
+          nav: optionsTopMenu,
+          book: req.book
+        }
+      );
     });
 
   return bookRouter;

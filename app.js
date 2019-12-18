@@ -5,6 +5,14 @@ const chalk = require('chalk');
 const morgan = require('morgan');
 const path = require('path');
 
+const optionsTopMenu = [
+  { title: 'Books', link: '/books' },
+  { title: 'Authors', link: '/authors' }
+];
+
+const bookRouter = require('./routers/booksRouter')(optionsTopMenu);
+const authorRouter = require('./routers/authorsRouter')(optionsTopMenu);
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -20,8 +28,17 @@ app.set('views', './src/views');
 app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
-  res.render('index', { title: 'My Library', list: ['a', 'b', 'c'] });
+  res.render(
+    'index',
+    {
+      title: 'Home',
+      nav: optionsTopMenu
+    }
+  );
 });
+
+app.use('/books', bookRouter);
+app.use('/authors', authorRouter);
 
 app.listen(port, () => {
   console.log(`listening on port ${chalk.green(port)}.`);

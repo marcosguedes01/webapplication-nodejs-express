@@ -6,7 +6,7 @@
 }
 
 body {
-  padding-top:50px;
+  /* padding-top:50px; */
   color:#646464;
   background-color:#efefef;
 }
@@ -165,3 +165,23 @@ a,a:hover {
 .btn-twitter:hover {background-color:#3088FF;color:#62BBFF;}
 .btn-facebook:hover {background-color:#2A4998;color:#4C6BBA;}
 .btn-google-plus:hover {background-color:#C23836;color:#E45A58;}
+
+ul.nav.navbar-nav {
+  width: 100%;
+}
+
+.nav.navbar-nav li {
+  float: left;
+  width: 100px
+}
+
+ul.main-menu {
+  width: 100%;
+}
+
+ul.main-menu li {
+  width: auto;
+  display: inline-block;
+  list-style: none;
+  padding: 10px 20px 0px 20px;
+}

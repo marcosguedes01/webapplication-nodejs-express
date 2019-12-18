@@ -32,8 +32,9 @@ const optionsTopMenu = [
   { title: 'Authors', link: '/authors' }
 ];
 
-const bookRouter = require('./routers/booksRouter')(sqlConfig, optionsTopMenu);
-const authorRouter = require('./routers/authorsRouter')(optionsTopMenu);
+const adminRouter = require('./routers/adminRoutes')(optionsTopMenu);
+const bookRouter = require('./routers/booksRoutes')(sqlConfig, optionsTopMenu);
+const authorRouter = require('./routers/authorsRoutes')(optionsTopMenu);
 
 app.get('/', (req, res) => {
   res.render(
@@ -45,6 +46,7 @@ app.get('/', (req, res) => {
   );
 });
 
+app.use('/admin', adminRouter);
 app.use('/books', bookRouter);
 app.use('/authors', authorRouter);
 

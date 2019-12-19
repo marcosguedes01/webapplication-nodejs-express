@@ -7,17 +7,6 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
 
-const sqlConfig = {
-  user: 'appslearn',
-  password: 'learn@apps/#123',
-  server: 'appslearn.database.windows.net',
-  database: 'AppsLearn',
-
-  options: {
-    encrypt: true
-  }
-};
-
 app.use(morgan('tiny'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
@@ -32,8 +21,9 @@ const optionsTopMenu = [
   { title: 'Authors', link: '/authors' }
 ];
 
-const bookRouter = require('./routers/booksRouter')(sqlConfig, optionsTopMenu);
-const authorRouter = require('./routers/authorsRouter')(optionsTopMenu);
+const adminRouter = require('./routers/adminRoutes')();
+const bookRouter = require('./routers/booksRoutes')(optionsTopMenu);
+const authorRouter = require('./routers/authorsRoutes')(optionsTopMenu);
 
 app.get('/', (req, res) => {
   res.render(
@@ -45,6 +35,7 @@ app.get('/', (req, res) => {
   );
 });
 
+app.use('/admin', adminRouter);
 app.use('/books', bookRouter);
 app.use('/authors', authorRouter);
 

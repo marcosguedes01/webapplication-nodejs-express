@@ -21,9 +21,9 @@ const optionsTopMenu = [
   { title: 'Authors', link: '/authors' }
 ];
 
-const adminRouter = require('./routers/adminRoutes')();
-const bookRouter = require('./routers/booksRoutes')(optionsTopMenu);
-const authorRouter = require('./routers/authorsRoutes')(optionsTopMenu);
+const adminRouter = require('./src/routers/adminRoutes')();
+const bookRouter = require('./src/routers/booksRoutes')(optionsTopMenu);
+const authorRouter = require('./src/routers/authorsRoutes')(optionsTopMenu);
 
 app.get('/', (req, res) => {
   res.render(

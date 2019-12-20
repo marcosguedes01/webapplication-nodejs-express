@@ -1,8 +1,9 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
 const debug = require('debug')('app:authRoutes');
+const passport = require('passport');
 
-function router() {
+function router(nav) {
   const authRouter = express.Router();
   const url = 'mongodb://localhost:27017';
   const dbName = 'DbLibrary';
@@ -28,12 +29,24 @@ function router() {
             res.redirect('/auth/profile');
           });
         } catch (err) {
-          debug(err);
+          debug(err.stack);
         } finally {
           client.close();
         }
       })();
     });
+
+  authRouter.route('/signIn')
+    .get((req, res) => {
+      res.render('signin', {
+        nav,
+        title: 'Sign In'
+      });
+    })
+    .post(passport.authenticate('local', {
+      successRedirect: '/auth/profile',
+      failureRedirect: '/'
+    }));
 
   authRouter.route('/profile')
     .get((req, res) => {

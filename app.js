@@ -32,7 +32,7 @@ const optionsTopMenu = [
   { title: 'Authors', link: '/authors' }
 ];
 
-const authRouter = require('./src/routers/authRoutes')();
+const authRouter = require('./src/routers/authRoutes')(optionsTopMenu);
 const adminRouter = require('./src/routers/adminRoutes')();
 const bookRouter = require('./src/routers/booksRoutes')(optionsTopMenu);
 const authorRouter = require('./src/routers/authorsRoutes')(optionsTopMenu);

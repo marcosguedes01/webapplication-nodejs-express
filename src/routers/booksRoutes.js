@@ -7,6 +7,14 @@ function router(optionsTopMenu) {
   const url = 'mongodb://localhost:27017';
   const dbName = 'DbLibrary';
 
+  bookRouter.use((req, res, next) => {
+    if (req.user) {
+      next();
+    } else {
+      res.redirect('/');
+    }
+  });
+
   bookRouter.get('/', (req, res) => {
     (async () => {
       let client;

@@ -48,7 +48,20 @@ function router(nav) {
       failureRedirect: '/'
     }));
 
+  authRouter.route('/signout')
+    .get((req, res) => {
+      req.logout();
+      res.redirect('/');
+    });
+
   authRouter.route('/profile')
+    .all((req, res, next) => {
+      if (req.user) {
+        next();
+      } else {
+        res.redirect('/');
+      }
+    })
     .get((req, res) => {
       res.json(req.user);
     });

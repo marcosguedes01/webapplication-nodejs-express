@@ -1,11 +1,10 @@
 const express = require('express');
-const debug = require('debug')('app:bookRoutes');
-const { MongoClient, ObjectID } = require('mongodb');
+const bookController = require('../controllers/bookController');
+const bookService = require('../services/goodreadsService');
 
 function router(optionsTopMenu) {
   const bookRouter = express.Router();
-  const url = 'mongodb://localhost:27017';
-  const dbName = 'DbLibrary';
+  const { getIndex, getById, middleware } = bookController(bookService, optionsTopMenu);
 
   bookRouter.use((req, res, next) => {
     if (req.user) {
@@ -15,68 +14,12 @@ function router(optionsTopMenu) {
     }
   });
 
-  bookRouter.get('/', (req, res) => {
-    (async () => {
-      let client;
-      try {
-        client = await MongoClient.connect(url);
-        debug('Connected correctly to server');
-
-        const db = client.db(dbName);
-        const col = await db.collection('books');
-        const books = await col.find().toArray();
-
-        res.render(
-          'books',
-          {
-            title: 'Books',
-            nav: optionsTopMenu,
-            books
-          }
-        );
-      } catch (err) {
-        debug(err.stack);
-      } finally {
-        client.close();
-      }
-    })();
-  });
+  bookRouter.route('/')
+    .get(getIndex);
 
   bookRouter.route('/:id')
-    .all((req, res, next) => {
-      const { id } = req.params;
-      (async () => {
-        let client;
-        try {
-          client = await MongoClient.connect(url);
-          debug('Connected correctly to server');
-
-          const db = client.db(dbName);
-          const col = await db.collection('books');
-          const book = await col.findOne({ _id: new ObjectID(id) });
-
-          debug(book);
-
-          req.book = book;
-        } catch (err) {
-          debug(err.stack);
-        } finally {
-          client.close();
-        }
-
-        next();
-      })();
-    })
-    .get((req, res) => {
-      res.render(
-        'book',
-        {
-          title: 'Book',
-          nav: optionsTopMenu,
-          book: req.book
-        }
-      );
-    });
+    .all(middleware)
+    .get(getById);
 
   return bookRouter;
 }
